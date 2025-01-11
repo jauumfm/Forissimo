@@ -1,9 +1,8 @@
 package com.ONE.Forissimo.models.usuario;
 
-import com.ONE.Forissimo.models.curso.Curso;
 import com.ONE.Forissimo.models.perfil.Perfil;
-import com.ONE.Forissimo.models.resposta.Resposta;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,9 +29,17 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
 
+    @Embedded
     @ManyToOne
     @JoinColumn(name = "perfil_id", nullable = false)
     private Perfil perfil_id; // Mapeia a relação muitos-para-muitos
+
+    public Usuario(@Valid DadosCadastro dados) {
+        this.nome= dados.nome();
+        this.senha= dados.senha();
+        this.email=dados.email();
+        this.perfil_id=dados.perfil();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,5 +77,6 @@ public class Usuario implements UserDetails {
         return true;
     }
 }
+
 
 

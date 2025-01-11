@@ -1,9 +1,7 @@
 package com.ONE.Forissimo.controller;
 
 
-import com.ONE.Forissimo.models.usuario.DadosAutenticacao;
-import com.ONE.Forissimo.models.usuario.Usuario;
-import com.ONE.Forissimo.models.usuario.UsuarioRepository;
+import com.ONE.Forissimo.models.usuario.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,17 +30,17 @@ public class LoginController {
     private TokenService tokenService;
 
     /*CADASTRANDO*/
-//    @PostMapping
-//    @Transactional
-//    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastro dados, UriComponentsBuilder uriBuilder) {
-//        /*UriComponentsBuilder CRIA A PRIMEIRA PARTE DO LINK ESCONDENDO O MSM */
-//        var user = new Usuario(dados);
-//        repository.save(user);
-//        /*ESSE CODIGO RETORNA 201 Q EXIGE TAMBEM O Q FOI CADASTRAO E UM CABECALHO COM URI*/
-//        var uri = uriBuilder.path("/usuario/{id}").buildAndExpand(user.getId()).toUri();
-//        /*CAMINHO BASCIO LOCALHOST(COMPLEMENTO DO CAMINHO).PEGA O ID Q  FOI CRIADO AGOPRA.TRANSFORMA EM URI*/
-//        return ResponseEntity.created(uri).body(new DadosDetalhamento(user));
-//    }
+    @PostMapping
+    @Transactional
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastro dados, UriComponentsBuilder uriBuilder) {
+        /*UriComponentsBuilder CRIA A PRIMEIRA PARTE DO LINK ESCONDENDO O MSM */
+        var user = new Usuario(dados);
+        repository.save(user);
+        /*ESSE CODIGO RETORNA 201 Q EXIGE TAMBEM O Q FOI CADASTRAO E UM CABECALHO COM URI*/
+        var uri = uriBuilder.path("/usuario/{id}").buildAndExpand(user.getId()).toUri();
+        /*CAMINHO BASCIO LOCALHOST(COMPLEMENTO DO CAMINHO).PEGA O ID Q  FOI CRIADO AGOPRA.TRANSFORMA EM URI*/
+        return ResponseEntity.created(uri).body(new DadosDetalhamento(user));
+    }
 
     /*FAZENDO LOGIN*/
     @PostMapping
@@ -53,8 +51,9 @@ public class LoginController {
         var token = new UsernamePasswordAuthenticationToken(dados.nome(), dados.senha());
         /*authentication é o objeto que representa o usuario aitenticado */
         var authentication = manager.authenticate(token);
-        //var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
         return null;//ResponseEntity.ok(new DadosTokenJWT(tokenJWT));/*a resposta vira um DadosTokenTJWT*/
     }
+
 }
 
