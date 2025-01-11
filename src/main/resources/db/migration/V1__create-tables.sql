@@ -8,19 +8,12 @@ CREATE TABLE perfil (
 -- Tabela USUARIO
 CREATE TABLE usuario (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    login VARCHAR(100) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id)
-);
-
--- Tabela USUARIO_PERFIL (Associação entre USUARIO e PERFIL)
-CREATE TABLE usuario_perfil (
-    usuario_id BIGINT NOT NULL,
     perfil_id BIGINT NOT NULL,
-    PRIMARY KEY (usuario_id, perfil_id),
-    CONSTRAINT fk_usuario_perfil_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id),
-    CONSTRAINT fk_usuario_perfil_perfil FOREIGN KEY (perfil_id) REFERENCES perfil (id)
+    PRIMARY KEY (id),
+    CONSTRAINT fk_usuario_perfil FOREIGN KEY (perfil_id) REFERENCES perfil(id)
 );
 
 -- Tabela CURSO
@@ -35,8 +28,24 @@ CREATE TABLE curso (
 CREATE TABLE topico (
     id BIGINT NOT NULL AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
-    mensagem VARCHAR(255) NOT NULL,
+    mensagem VARCHAR(100) NOT NULL,
+    status BOOLEAN NOT NULL,
+    autor_id BIGINT NOT NULL,
     data DATETIME NOT NULL,
-    status BOOLEAN NOT NULL DEFAULT FALSE, -- Indica se a dúvida foi sanada
-    autor_id BIGINT NOT NULL, -- Referência ao autor (usuário)
-    curso_id BIGINT NO
+    curso_id BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_topico_autor FOREIGN KEY (autor_id) REFERENCES usuario(id),
+    CONSTRAINT fk_topico_curso FOREIGN KEY (curso_id) REFERENCES curso(id)
+);
+
+CREATE TABLE resposta (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    mensagem VARCHAR(100) NOT NULL,
+    topico_id BIGINT NOT NULL,
+    data DATETIME NOT NULL,
+    autor_id BIGINT NOT NULL,
+    solucao BOOLEAN NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_resposta_topico FOREIGN KEY (topico_id) REFERENCES topico(id),
+    CONSTRAINT fk_resposta_autor FOREIGN KEY (autor_id) REFERENCES usuario(id)
+);

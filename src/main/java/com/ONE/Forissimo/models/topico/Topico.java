@@ -22,21 +22,14 @@ public class Topico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "titulo", nullable = false)
     private String titulo;
-
-    @Column(name = "mensagem", nullable = false)
     private String mensagem;
-
-    @Column(name = "status", nullable = false)
     private Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "autor_id", nullable = false)
     private Usuario autor;
 
-    @Column(name = "data", nullable = false)
     private LocalDateTime data;
 
     @ManyToOne

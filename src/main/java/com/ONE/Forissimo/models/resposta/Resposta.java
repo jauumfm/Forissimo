@@ -22,21 +22,19 @@ public class Resposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mensagem", nullable = false)
+
     private String mensagem;
 
     @ManyToOne
     @JoinColumn(name = "topico_id", nullable = false)
-    private Topico topico;
+    private Topico topico_id;
 
-    @Column(name = "data", nullable = false)
     private LocalDateTime data;
 
     @ManyToOne
     @JoinColumn(name = "autor_id", nullable = false)
     private Usuario autor;
 
-    @Column(name = "solucao", nullable = false)
     private Boolean solucao;
 }
 
