@@ -1,4 +1,4 @@
-package com.example.Forissimo;
+package com.ONE.Forissimo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
