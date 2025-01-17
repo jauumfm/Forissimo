@@ -4,12 +4,15 @@ import com.ONE.Forissimo.models.curso.Curso;
 import com.ONE.Forissimo.models.resposta.Resposta;
 import com.ONE.Forissimo.models.usuario.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "topico")
 @Entity(name = "Topico")
@@ -23,6 +26,9 @@ public class Topico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
+
+    @Column(length = 1000) // Reflete a mudança no banco
+    @Size(max = 1000, message = "A mensagem não pode ter mais de 1000 caracteres")
     private String mensagem;
     private Boolean status;
 
@@ -36,9 +42,52 @@ public class Topico {
     @JoinColumn(name = "curso_id", nullable = false)
     private Curso curso;
 
-    @OneToOne
-    @JoinColumn(name = "resposta_id")
-    private Resposta resposta; // Mapeia a relação de 1 para 1 com Resposta
+    @OneToMany(mappedBy = "topico")
+    private List<Resposta> resposta;// Mapeia a relação de 1 para 1 com Resposta
+
+    public Topico(@Valid DadosCriacaoTopico dados, Curso curso, Usuario autor) {
+        this.autor = autor;
+        this.curso = curso;
+        this.titulo = dados.titulo();
+        this.data = LocalDateTime.now();
+        this.mensagem = dados.mensagem();
+        this.status = false;
+    }
+
+    public Topico() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getMensagem() {
+        return mensagem;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public Usuario getAutor() {
+        return autor;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public Curso getCurso() {
+        return curso;
+    }
+
+    public List<Resposta> getResposta() {
+        return resposta;
+    }
 }
 
 

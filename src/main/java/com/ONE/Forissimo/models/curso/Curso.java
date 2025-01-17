@@ -18,6 +18,20 @@ public class Curso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }
 

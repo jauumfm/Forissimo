@@ -17,10 +17,14 @@ import java.util.List;
 @Table(name = "usuario")
 @Entity(name = "Usuario")
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Usuario implements UserDetails {
+
+    public Usuario() {
+        // Construtor padrão necessário para o JPA
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +33,35 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
 
-    @Embedded
     @ManyToOne
     @JoinColumn(name = "perfil_id", nullable = false)
-    private Perfil perfil_id; // Mapeia a relação muitos-para-muitos
+    private Perfil perfil; // Mapeia a relação muitos-para-muitos
 
-    public Usuario(@Valid DadosCadastro dados) {
+    public Usuario(@Valid DadosCadastro dados, Perfil perfil) {
         this.nome= dados.nome();
         this.senha= dados.senha();
         this.email=dados.email();
-        this.perfil_id=dados.perfil();
+        this.perfil= perfil;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Perfil getPerfil() {
+        return perfil;
     }
 
     @Override
@@ -47,14 +70,16 @@ public class Usuario implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
+
+
     @Override
     public String getPassword() {
-        return "senha";
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return "nome";
+        return nome;
     }
 
     @Override
