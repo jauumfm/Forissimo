@@ -102,6 +102,10 @@ public class Topico {
     public List<Resposta> getResposta() {
         return resposta;
     }
+
+    public void respondido(Topico topico) {
+        this.status=true;
+    }
 }
 
 

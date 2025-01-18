@@ -25,27 +25,24 @@ public class SecurityFilter extends OncePerRequestFilter {/*herdando uma classe 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var tokenJWT = recuperarToken(request);/*criando cariavel com topken armazenado*/
+        var tokenJWT = recuperarToken(request);
 
         if (tokenJWT != null) {
             var subject = tokenService.getSubject(tokenJWT);
-            /*isso recupera o email e chama o metodo para verificar token*/
             var usuario = repository.findByNome(subject);
 
 
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
         }
-        filterChain.doFilter(request, response);/*codigo feito para depois devalidado
-        ir pro proximo filtro*/
+        filterChain.doFilter(request, response);
     }
 
     private String recuperarToken(HttpServletRequest request) {
-        var authorizationHeader = request.getHeader("Authorization");/*lendo token do cabecalho*/
+        var authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null){/*verifica se cabecalho ta vazio*/
+        if (authorizationHeader != null){
             return authorizationHeader.replace("Bearer ", "");
         }
             return null;

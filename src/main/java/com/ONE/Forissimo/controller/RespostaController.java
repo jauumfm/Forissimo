@@ -1,6 +1,7 @@
 package com.ONE.Forissimo.controller;
 
 
+import com.ONE.Forissimo.infra.exception.ValidacaoException;
 import com.ONE.Forissimo.models.curso.CursoRepository;
 import com.ONE.Forissimo.models.resposta.*;
 import com.ONE.Forissimo.models.topico.DadosCriacaoTopico;
@@ -35,6 +36,9 @@ public class RespostaController {
         /*UriComponentsBuilder CRIA A PRIMEIRA PARTE DO LINK ESCONDENDO O MSM */
         var autor = usuarioRepository.findById(dados.autorId())/*verificando se o autor existe*/
                 .orElseThrow(() -> new IllegalArgumentException("Usuario não encontrado"));
+        if (!autor.getAtivo()){
+            throw new ValidacaoException("Usuario excluido ou desativado");
+        }
         var topico = topicoRepository.findById(dados.topicoId())/*verificando se o curso existe*/
                 .orElseThrow(() -> new IllegalArgumentException("topico não encontrado"));
         var resposta = new Resposta(dados, topico, autor);
@@ -62,6 +66,8 @@ public class RespostaController {
     public ResponseEntity excluir(@PathVariable Long id) {
         respostaRepository.deleteById(id);
         return ResponseEntity.noContent().build();
-
     }
+
+
+
 }

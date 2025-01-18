@@ -12,29 +12,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret}")/*aplication. properties vai estar la*/
+    @Value("${api.security.token.secret}")
     private String secret;
 
-    public String gerarToken(Usuario usuario) {/*esse usuario e so pra mostrar no getlogin*/
+    public String gerarToken(Usuario usuario) {
         try {
 
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
-                    .withIssuer("Forissimo")/*api dona mostrado no token*/
-                    .withSubject(usuario.getNome())/*adicionand ao token qual usuario*/
+                    .withIssuer("Forissimo")
+                    .withSubject(usuario.getNome())
                     .sign(algoritmo);
         } catch (JWTCreationException exception){
             throw new RuntimeException("erro ao gerrar token jwt", exception);
         }
     }
 
-    public String getSubject(String tokenJWT) {/*passa o token*/
+    public String getSubject(String tokenJWT) {
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)
-                    .withIssuer("Forissimo")/*verificando isuer*/
+                    .withIssuer("Forissimo")
                     .build()
-                    .verify(tokenJWT)/*verifica se o token e valido*/
+                    .verify(tokenJWT)
                     .getSubject();
         } catch (JWTVerificationException exception) {
             throw new RuntimeException("Token JWT inválido ou expirado!");

@@ -4,6 +4,7 @@ import com.ONE.Forissimo.models.resposta.Resposta;
 import com.ONE.Forissimo.models.resposta.RespostaListagem;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 public record DadosCompletosTopico (long id,
@@ -18,9 +19,10 @@ public record DadosCompletosTopico (long id,
 
     public DadosCompletosTopico(Topico topico) {
         this(topico.getId(), topico.getTitulo(), topico.getMensagem(),topico.getStatus(),
-                topico.getAutor().getNome(),topico.getData(),topico.getCurso().getNome(),topico.getCurso().getCategoria().name(),
+                topico.getAutor().getAtivo()?topico.getAutor().getNome():"usuario desativado",topico.getData(),topico.getCurso().getNome(),topico.getCurso().getCategoria().name(),
                 topico.getResposta()/*criando lista de RespostasListagem*/
                         .stream()
+                        .sorted(Comparator.comparing(Resposta::getSolucao).reversed()) // Ordena por 'solucao' (true primeiro)
                         .map(RespostaListagem::new)
                         .toList());
     }

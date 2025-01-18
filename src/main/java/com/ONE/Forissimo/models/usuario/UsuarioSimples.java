@@ -8,7 +8,7 @@ public record UsuarioSimples(
         Perfil perfil
 ) {
     public UsuarioSimples(Usuario usuario) {
-        this(usuario.getId(), usuario.getNome(), usuario.getPerfil());
+        this(usuario.getId(), usuario.getAtivo()?usuario.getNome():"usuario desativado", usuario.getPerfil());
     }
 }
 

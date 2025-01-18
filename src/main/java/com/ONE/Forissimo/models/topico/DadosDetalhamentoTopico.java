@@ -16,7 +16,7 @@ public record DadosDetalhamentoTopico(long id,
                                       String categoria) {
     public DadosDetalhamentoTopico(Topico topico) {
         this(topico.getId(), topico.getTitulo(), topico.getMensagem(),topico.getStatus(),
-                topico.getAutor().getNome(),topico.getData(),topico.getCurso().getNome(),topico.getCurso().getCategoria().name());
+                topico.getAutor().getAtivo()?topico.getAutor().getNome():"usuario desativado",topico.getData(),topico.getCurso().getNome(),topico.getCurso().getCategoria().name());
 
     }
 }

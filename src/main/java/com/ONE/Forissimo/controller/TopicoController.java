@@ -1,7 +1,10 @@
 package com.ONE.Forissimo.controller;
 
 
+import com.ONE.Forissimo.infra.exception.ValidacaoException;
 import com.ONE.Forissimo.models.curso.CursoRepository;
+import com.ONE.Forissimo.models.resposta.DadosDetalhamentoResposta;
+import com.ONE.Forissimo.models.resposta.Resposta;
 import com.ONE.Forissimo.models.resposta.RespostaRepository;
 import com.ONE.Forissimo.models.topico.*;
 import com.ONE.Forissimo.models.usuario.UsuarioRepository;
@@ -14,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("topico")
@@ -38,6 +43,9 @@ public class TopicoController {
         /*UriComponentsBuilder CRIA A PRIMEIRA PARTE DO LINK ESCONDENDO O MSM */
         var autor = usuarioRepository.findById(dados.autorId())/*verificando se o autor existe*/
                 .orElseThrow(() -> new IllegalArgumentException("Usuario não encontrado"));
+                if (!autor.getAtivo()){
+                    throw new ValidacaoException("Usuario excluido ou desativado");
+                }
         var curso = cursoRepository.findById(dados.cursoId())/*verificando se o curso existe*/
                 .orElseThrow(() -> new IllegalArgumentException("curso não encontrado"));
         var topico = new Topico(dados, curso,autor);
@@ -60,6 +68,9 @@ public class TopicoController {
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
         var topico = topicoRepository.getReferenceById(id);
+        if (!topico.getAutor().getAtivo()){
+            topico.getAutor().setNome("usuario desativado");
+        }
         return ResponseEntity.ok(new DadosCompletosTopico(topico));
     }
 
@@ -72,14 +83,26 @@ public class TopicoController {
         return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
     }
 
-    /*EXCLUINDO RESPOSTA*/
+    /*EXCLUINDO topico*/
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
         respostaRepository.deleteByTopicoId(id);
         topicoRepository.deleteById(id);
         return ResponseEntity.noContent().build();
-
     }
 
+    /*setando RESPOSTA do ropico*/
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity setResposta(@PathVariable Long id, @RequestBody @Valid Long idResposta) {
+        var topico = topicoRepository.getReferenceById(id);
+        topico.respondido(topico);
+        List<Resposta> respostas = respostaRepository.findByTopico_Id(id);
+        respostas.forEach(resp -> resp.setSolucao(false));
+        respostaRepository.saveAll(respostas);
+        var resposta = respostaRepository.getReferenceById(idResposta);
+        resposta.setResposta(id,resposta);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -1,0 +1,2 @@
+ALTER TABLE usuario
+ADD CONSTRAINT UNIQUE (nome);

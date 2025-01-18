@@ -9,8 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Table(name = "resposta")
 @Entity(name = "Resposta")
@@ -78,6 +81,14 @@ public class Resposta {
         if (dados.mensagem() != null) {
             this.mensagem = dados.mensagem();
         }
+    }
+
+    public void setSolucao(Boolean solucao) {
+        this.solucao = solucao;
+    }
+
+    public void setResposta(long id, Resposta resposta) {
+        this.solucao=true;
     }
 }
 

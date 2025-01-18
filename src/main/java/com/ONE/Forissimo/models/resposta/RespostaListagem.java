@@ -12,7 +12,7 @@ public record RespostaListagem(Long id,
                 resposta.getId(),
                 resposta.getMensagem(),
                 resposta.getSolucao(),
-                resposta.getAutor().getNome(),
+                resposta.getAutor().getAtivo()?resposta.getAutor().getNome():"usuario desativado",
                 resposta.getData());
     }
 }
