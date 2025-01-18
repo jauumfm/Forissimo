@@ -1,29 +1,4 @@
-<title>README - Forissimo</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0 20px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        h1, h2, h3 {
-            color: #2c3e50;
-        }
-        ul {
-            padding-left: 20px;
-        }
-        pre {
-            background: #ecf0f1;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-    </style>
-</head>
 
-<body>
     <h1>Forissimo</h1>
     <p>Forissimo é uma aplicação desenvolvida para gerenciar tópicos, respostas e usuários, com autenticação segura e organização eficiente.</p>
 
@@ -82,6 +57,4 @@
 
     <h2>Licença</h2>
     <p>Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.</p>
-</body>
 
-</html>
