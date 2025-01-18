@@ -28,13 +28,13 @@ public class Resposta {
     @Size(max = 1000, message = "A mensagem não pode ter mais de 1000 caracteres")
     private String mensagem;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "topico_id", nullable = false)
     private Topico topico;
 
     private LocalDateTime data;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "autor_id", nullable = false)
     private Usuario autor;
 
@@ -48,7 +48,7 @@ public class Resposta {
         this.solucao = false;
     }
 
-    private Resposta(){}
+    public Resposta(){}
 
     public Long getId() {
         return id;
@@ -74,6 +74,11 @@ public class Resposta {
         return solucao;
     }
 
+    public void atualizarResposta(@Valid DadosAtualizacaoResposta dados) {
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
+    }
 }
 
 

@@ -25,82 +25,96 @@ public class Usuario implements UserDetails {
         // Construtor padrão necessário para o JPA
     }
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
     private String senha;
+    private boolean ativo;
 
     @ManyToOne
-    @JoinColumn(name = "perfil_id", nullable = false)
-    private Perfil perfil; // Mapeia a relação muitos-para-muitos
+@JoinColumn(name = "perfil_id", nullable = false)
+private Perfil perfil; // Mapeia a relação muitos-para-muitos
 
-    public Usuario(@Valid DadosCadastro dados, Perfil perfil) {
-        this.nome= dados.nome();
-        this.senha= dados.senha();
-        this.email=dados.email();
-        this.perfil= perfil;
+public Usuario(@Valid DadosCadastro dados, Perfil perfil) {
+    this.nome= dados.nome();
+    this.senha= dados.senha();
+    this.email=dados.email();
+    this.perfil= perfil;
+    this.ativo = true;
+}
+
+public void atualizarUsuario(DadosAtualizacaoUsuario dados) {
+    if (dados.nome() != null) {
+        this.nome = dados.nome();
     }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
+    if (dados.email() != null) {
+        this.email = dados.email();
     }
+}
 
-    public long getId() {
-        return id;
-    }
+public void setSenha(String senha) {
+    this.senha = senha;
+}
 
-    public String getNome() {
-        return nome;
-    }
+public long getId() {
+    return id;
+}
 
-    public String getEmail() {
-        return email;
-    }
+public String getNome() {
+    return nome;
+}
 
-    public Perfil getPerfil() {
-        return perfil;
-    }
+public String getEmail() {
+    return email;
+}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        /*quando tem perfis de usuario como admin, normal e etc*/
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
+public Perfil getPerfil() {
+    return perfil;
+}
 
+@Override
+public Collection<? extends GrantedAuthority> getAuthorities() {
+    /*quando tem perfis de usuario como admin, normal e etc*/
+    return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+}
 
+@Override
+public String getPassword() {
+    return senha;
+}
 
-    @Override
-    public String getPassword() {
-        return senha;
-    }
+@Override
+public String getUsername() {
+    return nome;
+}
 
-    @Override
-    public String getUsername() {
-        return nome;
-    }
+@Override
+public boolean isAccountNonExpired() {
+    return true;
+}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+@Override
+public boolean isAccountNonLocked() {
+    return true;
+}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+@Override
+public boolean isCredentialsNonExpired() {
+    return true;
+}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+@Override
+public boolean isEnabled() {
+    return true;
+}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+public void excluir() {
+    this.ativo = false;
+    this.nome = "usuario desativado";
+    this.email = "Desativado";
+}
 }
 
 

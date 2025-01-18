@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Proxy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Proxy(lazy = false)
 public class Topico {
 
     @Id
@@ -38,11 +40,12 @@ public class Topico {
 
     private LocalDateTime data;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "curso_id", nullable = false)
     private Curso curso;
 
-    @OneToMany(mappedBy = "topico")
+
+    @OneToMany(mappedBy = "topico",fetch = FetchType.LAZY)/*MAPEANDO A RESPOSTA PRA SER VINCULADA AO TOPICO*/
     private List<Resposta> resposta;// Mapeia a relação de 1 para 1 com Resposta
 
     public Topico(@Valid DadosCriacaoTopico dados, Curso curso, Usuario autor) {
@@ -53,6 +56,17 @@ public class Topico {
         this.mensagem = dados.mensagem();
         this.status = false;
     }
+
+    public void atualizarTopico(DadosAtualizacaoTopico dados) {
+        if (dados.titulo() != null) {
+            this.titulo = dados.titulo();
+        }
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
+    }
+
+    /*LOMBOK COM DEFEITO*/
 
     public Topico() {
     }

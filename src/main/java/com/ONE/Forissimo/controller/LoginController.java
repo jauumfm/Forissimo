@@ -82,6 +82,25 @@ public class LoginController {
         return ResponseEntity.ok(new DadosDetalhamento(usuario));
     }
 
+    /*EDITANDO USUARIO*/
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoUsuario dados) {
+        var user = repository.getReferenceById(dados.id());
+        user.atualizarUsuario(dados);
+        return ResponseEntity.ok(new DadosDetalhamento(user));}
 
+    /*DESATIVANDO USUARIO*/
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+        var user = repository.getReferenceById(id);
+        user.excluir();
+        /*Response entity e para dar resposta para aquisicoa na web*/
+        return ResponseEntity.noContent().build();
+        /*tem mteodos estaticos no ResponseEnrity, porem nocontent n cria um objeto e o build faz isso*/
+    }
 }
+
+
 

@@ -2,9 +2,8 @@ package com.ONE.Forissimo.controller;
 
 
 import com.ONE.Forissimo.models.curso.CursoRepository;
+import com.ONE.Forissimo.models.resposta.RespostaRepository;
 import com.ONE.Forissimo.models.topico.*;
-import com.ONE.Forissimo.models.usuario.DadosDetalhamento;
-import com.ONE.Forissimo.models.usuario.DadosListagemUsuario;
 import com.ONE.Forissimo.models.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,9 @@ public class TopicoController {
 
     @Autowired
     private CursoRepository cursoRepository;
+
+    @Autowired
+    private RespostaRepository respostaRepository;
 
     /*CADASTRANDO TOPICO*/
     @PostMapping
@@ -60,4 +62,24 @@ public class TopicoController {
         var topico = topicoRepository.getReferenceById(id);
         return ResponseEntity.ok(new DadosCompletosTopico(topico));
     }
+
+    /*EDITAR TOPICO*/
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoTopico dados) {
+        var topico = topicoRepository.getReferenceById(dados.id());
+        topico.atualizarTopico(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
+    }
+
+    /*EXCLUINDO RESPOSTA*/
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+        respostaRepository.deleteByTopicoId(id);
+        topicoRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+
+    }
+
 }

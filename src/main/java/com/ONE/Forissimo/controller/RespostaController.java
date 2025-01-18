@@ -2,10 +2,7 @@ package com.ONE.Forissimo.controller;
 
 
 import com.ONE.Forissimo.models.curso.CursoRepository;
-import com.ONE.Forissimo.models.resposta.DadosCriacaoResposta;
-import com.ONE.Forissimo.models.resposta.DadosDetalhamentoResposta;
-import com.ONE.Forissimo.models.resposta.Resposta;
-import com.ONE.Forissimo.models.resposta.RespostaRepository;
+import com.ONE.Forissimo.models.resposta.*;
 import com.ONE.Forissimo.models.topico.DadosCriacaoTopico;
 import com.ONE.Forissimo.models.topico.DadosDetalhamentoTopico;
 import com.ONE.Forissimo.models.topico.Topico;
@@ -15,10 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -34,6 +28,7 @@ public class RespostaController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    /*CRIANDO RESPOSTAS*/
     @PostMapping
     @Transactional
     public ResponseEntity criarResposta(@RequestBody @Valid DadosCriacaoResposta dados, UriComponentsBuilder uriBuilder) {
@@ -50,5 +45,23 @@ public class RespostaController {
                 .toUri();
         /*CAMINHO BASCIO LOCALHOST(COMPLEMENTO DO CAMINHO).PEGA O ID Q  FOI CRIADO AGOPRA.TRANSFORMA EM URI*/
         return ResponseEntity.created(uri).body(new DadosDetalhamentoResposta(resposta));
+    }
+
+    /*ATUALIZNDO RESPOSTA*/
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoResposta dados) {
+        var resposta = respostaRepository.getReferenceById(dados.id());
+        resposta.atualizarResposta(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoResposta(resposta));
+    }
+
+    /*EXCLUINDO RESPOSTA*/
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+        respostaRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+
     }
 }
